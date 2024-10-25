@@ -1,0 +1,13 @@
+{
+    "es":{
+        "pokemon-title":"Encuentra Tu Pokemón Favorito", 
+        "pokemon-button":"Evolución" 
+        
+    },
+    "en":
+    {
+        "pokemon-title":"Find Your Favorite Pokemon",
+        "pokemon-button":"Evolution" 
+    }
+
+}
