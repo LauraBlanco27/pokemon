@@ -1,5 +1,5 @@
 import { html, fixture, assert, fixtureCleanup } from '@open-wc/testing';
-import '../list-pokemon.js'; // Asegúrate de que la ruta sea correcta
+import '../list-pokemon.js'; 
 
 suite('ListPokemon', () => {
   let el;

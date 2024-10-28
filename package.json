@@ -16,6 +16,7 @@
     "!**/*.scss"
   ],
   "dependencies": {
+    "@pokemon/pokemon-list-dm":"git@github.com:LauraBlanco27/listPokemon-dm.git",
     "@bbva-experience-components/bbva-button-default": "^3.4.7",
     "@bbva-experience-components/bbva-type-text": "^1.6.6",
     "@bbva-web-components/bbva-core-intl-mixin": "^1.8.3",

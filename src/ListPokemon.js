@@ -6,6 +6,7 @@ import "@bbva-web-components/bbva-foundations-spinner/bbva-foundations-spinner.j
 import "@bbva-experience-components/bbva-type-text/bbva-type-text.js"
 import { BbvaCoreIntlMixin } from '@bbva-web-components/bbva-core-intl-mixin';
 import "@bbva-web-components/bbva-web-card-product/bbva-web-card-product.js"
+import "@pokemon/pokemon-list-dm/pokemon-list-dm.js"
 
 export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
   
@@ -24,7 +25,7 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
     this.items = [];
     this.arrayPokemon = [];
     this.loading = true;
-    this.fetchPokemon(); 
+ 
   }
 
   static get styles() {
@@ -34,28 +35,13 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
     ];
   }
 
-  async fetchPokemon(limit = 100, offset = 0) {
-    try {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
-      const data = await response.json(); 
-      const pokemonList = data.results; // Accedemos a la lista de Pokémon
-      this.arrayPokemon = await Promise.all(
-        pokemonList.map(async (pokemon) => {
-          const res = await fetch(pokemon.url); // obtener más detalles de cada Pokémon
-          const pokemonDetails = await res.json();
-          return {
-            name: pokemonDetails.name,
-            image: pokemonDetails.sprites.front_default,
-            types: pokemonDetails.types.map(typeInfo => typeInfo.type.name).join(', ')
-          };
-        })
-      );
-      this.loading = false;
-    } catch (error) {
-      console.error('Error al obtener los Pokémon:', error);
-      this.loading = false; 
-    }
+  async firstUpdated() {
+    const PokemonListDm = this.shadowRoot.querySelector('pokemon-list-dm');
+    this.loading = true; 
+    this.arrayPokemon = await PokemonListDm.fetchPokemon(); 
+    this.loading = false; 
   }
+  
 
   render() {
     return html`
@@ -88,6 +74,8 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
           </div>
         `}
       </div>
+
+      <pokemon-list-dm></pokemon-list-dm>
     `;
   }
 }
