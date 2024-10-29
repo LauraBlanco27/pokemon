@@ -11,6 +11,7 @@
   "type": "module",
   "files": [
     "/src/",
+    "/imagenes/",
     "/locales/",
     "*.js",
     "!**/*.scss"
