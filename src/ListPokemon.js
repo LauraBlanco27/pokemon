@@ -3,14 +3,11 @@ import { getComponentSharedStyles } from '@bbva-web-components/bbva-core-lit-hel
 import styles from './list-pokemon.css.js';
 import "@bbva-experience-components/bbva-button-default/bbva-button-default.js";
 import "@bbva-web-components/bbva-foundations-spinner/bbva-foundations-spinner.js";
-import "@bbva-experience-components/bbva-type-text/bbva-type-text.js"
+import "@bbva-experience-components/bbva-type-text/bbva-type-text.js";
 import { BbvaCoreIntlMixin } from '@bbva-web-components/bbva-core-intl-mixin';
-import "@bbva-web-components/bbva-web-card-product/bbva-web-card-product.js"
-import "@pokemon/pokemon-list-dm/pokemon-list-dm.js"
+import "@pokemon/pokemon-list-dm/pokemon-list-dm.js";
 
 export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
-  
-
   static get properties() {
     return {
       items: { type: Array }, 
@@ -25,7 +22,6 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
     this.items = [];
     this.arrayPokemon = [];
     this.loading = true;
- 
   }
 
   static get styles() {
@@ -37,37 +33,51 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
 
   async firstUpdated() {
     const PokemonListDm = this.shadowRoot.querySelector('pokemon-list-dm');
-    this.loading = true;
-    this.arrayPokemon = await PokemonListDm.fetchPokemon();
-    this.loading = false;
+    this.loading = true; 
+    this.arrayPokemon = await PokemonListDm.fetchPokemon(); 
+    this.loading = false; 
   }
-  
 
   render() {
     return html`
-      <div class="container">
-        ${this.loading 
-          ? html`<bbva-foundations-spinner></bbva-foundations-spinner>` 
-          : html`
-            <div role="list" class="card-container"> 
-              ${this.arrayPokemon.map(pokemon => html`
+    <div class=container>
+      ${this.loading 
+        ? html`<bbva-foundations-spinner></bbva-foundations-spinner>` 
+        : html`
+          <div>
+            <bbva-type-text text="${this.t('pokemon-title')}" size="3XL"></bbva-type-text>
+          </div>
+          <div role="list" class="card-container"> 
+            ${this.arrayPokemon.length > 0
+              ? this.arrayPokemon.map(pokemon => html`
                 <div class="card">
                   <bbva-type-text text="${pokemon.name}"></bbva-type-text>
-                  <img src="${pokemon.image}" alt="${pokemon.name}" class="pokemon-image">
+                  <div @click="${() => this.navigateToDetails(pokemon.name)}"
+                       @keydown="${(e) => this._handleKeyDown(e, pokemon.name)}"
+                       class="pokemon-image-button">
+                    <img src="${pokemon.image}" alt="${pokemon.name}" slot="media" class="pokemon-image">
+                  </div>
+                  <div>
+                    ${pokemon.types.split(', ').map(type => html`
+                      <bbva-type-text class="pokemon-type ${type.toLowerCase()}" text="${type}"></bbva-type-text>
+                    `)}
+                  </div>
                   <bbva-button-default 
-                    text="Ver Evoluciones" 
-                    @click="${() => this.navigateToEvolution(pokemon.name)}">
+                    variant="secondary" 
+                    text="${this.t('pokemon-button')}" 
+                    @click="${() => this._navigateToEvolution(pokemon.name)}">
                   </bbva-button-default>
                 </div>
-              `)}
-            </div>
-          `}
+              `)
+              : html`<p>No se encontraron Pokémon.</p>`}
+          </div>
+        `}
       </div>
       <pokemon-list-dm></pokemon-list-dm>
     `;
   }
 
-  navigateToEvolution(pokemonName) {
+  _navigateToEvolution(pokemonName) {
     this.dispatchEvent(new CustomEvent('navigate-to-evolution', {
       detail: { pokemonName },
       bubbles: true,
@@ -76,4 +86,4 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
   }
 }
 
-
+window.customElements.define('list-pokemon', ListPokemon);
