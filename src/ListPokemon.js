@@ -22,7 +22,6 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
     this.items = [];
     this.arrayPokemon = [];
     this.loading = true;
-    this.addEventListener('evolution-selected', (e) => this.gotoEvolution(e.detail.pokemonName));
   }
 
   static get styles() {
@@ -66,7 +65,7 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
                   <bbva-button-default 
                     variant="secondary" 
                     text="${this.t('pokemon-button')}" 
-                    @click="${() => this.gotoEvolution(pokemon.name)}">
+                    @click="${() => this._navigateToEvolution(pokemon.name)}">
                   </bbva-button-default>
                 </div>
               `)
@@ -78,14 +77,13 @@ export class ListPokemon extends BbvaCoreIntlMixin(LitElement) {
     `;
   }
 
-  gotoEvolution(pokemonName) {
+  _navigateToEvolution(pokemonName) {
     this.dispatchEvent(new CustomEvent('navigate-to-evolution', {
       detail: { pokemonName },
       bubbles: true,
       composed: true
     }));
   }
-
 }
 
 window.customElements.define('list-pokemon', ListPokemon);
